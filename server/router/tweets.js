@@ -5,12 +5,14 @@ import * as tweetsController from "../controller/tweets.js";
 const router = express.Router();
 
 router
-  .get("/", tweetsController.getTweets)
-  .post("/", tweetsController.createTweet);
+  .route("/")
+  .get(tweetsController.getTweets)
+  .post(tweetsController.createTweet);
 
 router
-  .get("/:id", tweetsController.getTweet)
-  .put("/:id", tweetsController.updateTweet)
-  .delete("/:id", tweetsController.removeTweet);
+  .route("/:id")
+  .get(tweetsController.getTweet)
+  .put(tweetsController.updateTweet)
+  .delete(tweetsController.removeTweet);
 
 export default router;
