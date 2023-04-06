@@ -2,7 +2,7 @@ let tweets = [
   {
     id: "1",
     text: "송홍규 화이팅!",
-    createAt: Date.now().toString(),
+    createdAt: Date.now().toString(),
     name: "Bob",
     username: "bob",
     url: "",
@@ -10,7 +10,7 @@ let tweets = [
   {
     id: "2",
     text: ":( 2 화이팅!",
-    createAt: Date.now().toString(),
+    createdAt: Date.now().toString(),
     name: "SONG",
     username: "song",
     url: "",
@@ -33,12 +33,12 @@ export async function create(text, name, username) {
   const tweet = {
     id: Date.now().toString(),
     text,
-    createAt: new Date(),
+    createdAt: new Date(),
     name,
     username,
   };
   tweets = [tweet, ...tweets];
-  return tweets;
+  return tweet;
 }
 
 export async function update(id, text) {
