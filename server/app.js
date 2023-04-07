@@ -4,6 +4,7 @@ import cors from "cors";
 import helmet from "helmet";
 import "express-async-error";
 import tweetsRouter from "./router/tweets.js";
+import authRouter from "./router/auth.js";
 
 const app = express();
 const option = {};
@@ -13,6 +14,7 @@ app.use(cors(option));
 app.use(helmet());
 app.use(express.json());
 
+app.use("/auth", authRouter);
 app.use("/tweets", tweetsRouter);
 
 app.use((req, res, next) => {
