@@ -9,8 +9,12 @@ let users = [
   },
 ];
 
-export const findByUsername = (username) => {
+export const findByUsername = async (username) => {
   return users.find((u) => u.username === username);
+};
+
+export const findById = async (id) => {
+  return users.find((u) => u.id === id);
 };
 
 export const createUser = async (user) => {

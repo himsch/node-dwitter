@@ -46,6 +46,14 @@ export const login = async (req, res) => {
   return res.status(200).json({ token, username });
 };
 
+export const me = async (req, res) => {
+  const user = await userRepository.findById(req.userId);
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  res.status(200).json({ token: req.token, username: user.username });
+};
+
 const createJwtToken = (id) => {
   return jwt.sign({ id }, jwtSecretKey, { expiresIn: jwtExpiresInDays });
 };
