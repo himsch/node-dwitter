@@ -6,20 +6,31 @@ import * as authController from "../controller/auth.js";
 
 const router = express.Router();
 
-router.post("/signup", [
-  body("username").trim().notEmpty().withMessage("required username"),
-  body("password").trim().notEmpty().withMessage("required password"),
-  body("name").trim().notEmpty().withMessage("required name"),
-  body("email").notEmpty().withMessage("required email").normalizeEmail(),
+const validateCredential = [
+  body("username")
+    .trim()
+    .notEmpty()
+    .withMessage("username should be at least 5 characters"),
+  body("password")
+    .trim()
+    .isLength({ min: 5 })
+    .withMessage("password should be at least 5 characters"),
   validate,
-  authController.signup,
-]);
-router.post("/login", [
-  body("username").trim().notEmpty().withMessage("required username"),
-  body("password").trim().notEmpty().withMessage("required password"),
+];
+
+const validateSignup = [
+  ...validateCredential,
+  body("name").notEmpty().withMessage("name is missing"),
+  body("email").isEmail().normalizeEmail().withMessage("invalid email"),
+  body("url")
+    .isURL()
+    .withMessage("invalid URL")
+    .optional({ nullable: true, checkFalsy: true }), // null | '' 허용
   validate,
-  authController.login,
-]);
+];
+
+router.post("/signup", [validateSignup, authController.signup]);
+router.post("/login", [validateCredential, authController.login]);
 router.get("/me");
 
 export default router;
