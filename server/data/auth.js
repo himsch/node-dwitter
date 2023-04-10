@@ -2,7 +2,7 @@ let users = [
   {
     id: "1",
     username: "bob",
-    password: "$2b$12$G9",
+    password: "$2b$12$K1MgXcN/if9eXD/i7smg9.e3kxamwzZFvI5KQ/slYH62ZCDULVRVC", // 12345
     name: "Bob",
     email: "bob@gmail.com",
     url: "",
