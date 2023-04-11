@@ -29,8 +29,11 @@ export const updateTweet = async (req, res) => {
   const { id } = req.params;
   const { text } = req.body;
   const prev = await tweetsRepository.getById(id);
-  if (prev.userId === req.userId) {
-    res.status(401).send({ message: `No Auth` });
+  if (!prev) {
+    return res.sendStatus(404);
+  }
+  if (prev.userId !== req.userId) {
+    return res.sendStatus(403);
   }
   const tweet = await tweetsRepository.update(id, text);
   if (tweet) {
@@ -43,8 +46,11 @@ export const updateTweet = async (req, res) => {
 export const removeTweet = async (req, res) => {
   const { id } = req.params;
   const prev = await tweetsRepository.getById(id);
-  if (prev.userId === req.userId) {
-    res.status(401).send({ message: `No Auth` });
+  if (!prev) {
+    return res.sendStatus(404);
+  }
+  if (prev.userId !== req.userId) {
+    return res.sendStatus(403);
   }
   await tweetsRepository.remove(id);
   res.sendStatus(204);
