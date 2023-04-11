@@ -7,6 +7,7 @@ import tweetsRouter from "./router/tweets.js";
 import authRouter from "./router/auth.js";
 import { isAuth } from "./middleware/auth.js";
 import { config } from "./config.js";
+import { Server } from "socket.io";
 
 const app = express();
 const option = {};
@@ -26,4 +27,14 @@ app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ message: "Something went wrong" });
 });
-app.listen(config.host.port);
+const server = app.listen(config.host.port);
+const socketIO = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+socketIO.on("connection", (socket) => {
+  console.log("Client is here!!!");
+  socketIO.emit("dwitter", "Hello!!!");
+});
