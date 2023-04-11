@@ -6,6 +6,7 @@ import "express-async-error";
 import tweetsRouter from "./router/tweets.js";
 import authRouter from "./router/auth.js";
 import { isAuth } from "./middleware/auth.js";
+import { config } from "./config.js";
 
 const app = express();
 const option = {};
@@ -25,4 +26,4 @@ app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ message: "Something went wrong" });
 });
-app.listen(8080);
+app.listen(config.host.port);

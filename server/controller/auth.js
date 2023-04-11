@@ -1,14 +1,8 @@
 import jwt from "jsonwebtoken";
 import * as userRepository from "../data/auth.js";
 import "express-async-error";
-import dotenv from "dotenv";
 import bcrypt from "bcrypt";
-dotenv.config();
-
-// @todo: Make it secure!
-const jwtSecretKey = process.env.JWT_SECRET_KEY;
-const jwtExpiresInDays = "2d";
-const bcryptSaltRounds = 12;
+import { config } from "../config.js";
 
 export const signup = async (req, res) => {
   const { username, password, name, email, url } = req.body;
@@ -17,7 +11,7 @@ export const signup = async (req, res) => {
     return res.status(409).json({ message: `${username} already exists` }); // 409 Conflict.
   }
 
-  const hashed = await bcrypt.hash(password, bcryptSaltRounds); // 해싱은 컨트롤러?
+  const hashed = await bcrypt.hash(password, config.bcrypt.saltRounds); // 해싱은 컨트롤러?
   const userId = await userRepository.createUser({
     username,
     password: hashed,
@@ -55,5 +49,8 @@ export const me = async (req, res) => {
 };
 
 const createJwtToken = (id) => {
-  return jwt.sign({ id }, jwtSecretKey, { expiresIn: jwtExpiresInDays });
+  console.log(config.jwt.secretKey);
+  return jwt.sign({ id }, config.jwt.secretKey, {
+    expiresIn: config.jwt.expiresInSec,
+  });
 };
