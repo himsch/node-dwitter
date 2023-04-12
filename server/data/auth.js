@@ -7,6 +7,14 @@ let users = [
     email: "bob@gmail.com",
     url: "",
   },
+  {
+    id: "2",
+    username: "ellie",
+    password: "$2b$12$K1MgXcN/if9eXD/i7smg9.e3kxamwzZFvI5KQ/slYH62ZCDULVRVC",
+    name: "Ellie",
+    email: "ellie@gmail.com",
+    url: "",
+  },
 ];
 
 export const findByUsername = async (username) => {
