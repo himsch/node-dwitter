@@ -7,8 +7,8 @@ import tweetsRouter from "./router/tweets.js";
 import authRouter from "./router/auth.js";
 import { isAuth } from "./middleware/auth.js";
 import { config } from "./config.js";
-import { Server } from "socket.io";
 import { initSocket } from "./connection/socket.js";
+import { db } from "./db/database.js";
 
 const app = express();
 const option = {};
@@ -29,5 +29,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Something went wrong" });
 });
 
+db.getConnection().then((connection) => console.log(connection));
 const server = app.listen(config.host.port);
 initSocket(server);
