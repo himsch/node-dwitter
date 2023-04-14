@@ -29,6 +29,6 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Something went wrong" });
 });
 
-db.getConnection().then((connection) => console.log(connection));
+db.getConnection().then(() => console.log("db connected"));
 const server = app.listen(config.host.port);
 initSocket(server);
