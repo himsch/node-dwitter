@@ -8,7 +8,7 @@ import authRouter from "./router/auth.js";
 import { isAuth } from "./middleware/auth.js";
 import { config } from "./config.js";
 import { initSocket } from "./connection/socket.js";
-import { db, sequelize } from "./db/database.js";
+import { sequelize } from "./db/database.js";
 
 const app = express();
 const option = {};
@@ -29,8 +29,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Something went wrong" });
 });
 
-sequelize.sync().then((client) => {
-  // console.log(client);
+sequelize.sync().then(() => {
   const server = app.listen(config.host.port);
   initSocket(server);
 });
