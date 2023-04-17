@@ -1,4 +1,7 @@
 import * as userRepository from "./auth.js";
+import { getTweets } from "../database/database.js";
+import { findById } from "./auth.js";
+import { ObjectId } from "mongodb";
 
 let tweets = [
   {
@@ -16,50 +19,45 @@ let tweets = [
 ];
 
 export async function getAll() {
-  return Promise.all(
-    tweets.map(async (tweet) => {
-      const { username, name, url } = await userRepository.findById(
-        tweet.userId
-      );
-      return { ...tweet, username, name, url };
-    })
-  );
+  return getTweets().find({}).toArray();
 }
 
 export async function getAllByUsername(username) {
-  return getAll().then((tweets) =>
-    tweets.filter((tweet) => tweet.username === username)
-  );
+  return getTweets().find({ username }).toArray();
 }
 
 export async function getById(id) {
-  const found = tweets.find((tweet) => tweet.id === id);
-  if (!found) {
-    return null;
-  }
-  const { username, name, url } = await userRepository.findById(found.userId);
-  return { ...found, username, name, url };
+  return getTweets().findOne({ _id: new ObjectId(id) });
 }
 
 export async function create(text, userId) {
-  const tweet = {
-    id: Date.now().toString(),
-    text,
-    createdAt: new Date(),
-    userId,
-  };
-  tweets = [tweet, ...tweets];
-  return getById(tweet.id);
+  const { username, name, url } = await userRepository.findById(userId);
+  return getTweets()
+    .insertOne({
+      text,
+      createdAt: new Date().toString(),
+      username,
+      name,
+      url,
+      userId,
+    })
+    .then((result) => getById(result.insertedId.toString()));
 }
 
 export async function update(id, text) {
-  const tweet = tweets.find((tweet) => tweet.id === id);
-  if (tweet) {
-    tweet.text = text;
-  }
-  return getById(tweet.id);
+  console.log(id, text);
+  return getTweets()
+    .updateOne(
+      { _id: new ObjectId(id) },
+      {
+        $set: {
+          text,
+        },
+      }
+    )
+    .then((result) => getById(id));
 }
 
 export async function remove(id) {
-  tweets.filter((t) => t.id !== id);
+  getTweets().deleteOne({ _id: new ObjectId(id) });
 }
