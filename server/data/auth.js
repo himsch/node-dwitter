@@ -1,32 +1,25 @@
-let users = [
-  {
-    id: "1",
-    username: "bob",
-    password: "$2b$12$K1MgXcN/if9eXD/i7smg9.e3kxamwzZFvI5KQ/slYH62ZCDULVRVC", // 12345
-    name: "Bob",
-    email: "bob@gmail.com",
-    url: "",
-  },
-  {
-    id: "2",
-    username: "ellie",
-    password: "$2b$12$K1MgXcN/if9eXD/i7smg9.e3kxamwzZFvI5KQ/slYH62ZCDULVRVC",
-    name: "Ellie",
-    email: "ellie@gmail.com",
-    url: "",
-  },
-];
+import { ObjectId } from "mongodb";
+import { getUsers } from "../database/database.js";
 
 export const findByUsername = async (username) => {
-  return users.find((u) => u.username === username);
+  return getUsers() //
+    .findOne({ username })
+    .then(mapOptionalUser);
 };
 
 export const findById = async (id) => {
-  return users.find((u) => u.id === id);
+  return getUsers()
+    .findOne({ _id: new ObjectId(id) })
+    .then(mapOptionalUser);
 };
 
 export const createUser = async (user) => {
-  const created = { ...user, id: Date.now().toString() };
-  users = [...users, created];
-  return user.id;
+  return getUsers()
+    .insertOne(user)
+    .then((result) => result.insertedId.toString());
 };
+
+// map 은 a를 받아서 b로 변환해서 리턴, user가 있을수도 null일 수도 있으니 optional
+function mapOptionalUser(user) {
+  return user ? { ...user, id: user._id.toString() } : user;
+}

@@ -49,7 +49,6 @@ export const me = async (req, res) => {
 };
 
 const createJwtToken = (id) => {
-  console.log(config.jwt.secretKey);
   return jwt.sign({ id }, config.jwt.secretKey, {
     expiresIn: config.jwt.expiresInSec,
   });

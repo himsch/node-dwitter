@@ -9,6 +9,7 @@ import { isAuth } from "./middleware/auth.js";
 import { config } from "./config.js";
 import { Server } from "socket.io";
 import { initSocket } from "./connection/socket.js";
+import { connectDB } from "./database/database.js";
 
 const app = express();
 const option = {};
@@ -29,5 +30,10 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Something went wrong" });
 });
 
-const server = app.listen(config.host.port);
-initSocket(server);
+connectDB()
+  .then(() => {
+    console.log("DB Connected!!");
+    const server = app.listen(config.host.port);
+    initSocket(server);
+  })
+  .catch(console.error);
