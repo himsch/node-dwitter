@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
-
-import { ObjectId } from "mongodb";
-import { getUsers, useVirtualId } from "../database/database.js";
+import { useVirtualId } from "../database/database.js";
 
 const userSchema = new mongoose.Schema({
   username: { type: String, require: true },
