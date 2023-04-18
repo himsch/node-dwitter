@@ -20,6 +20,7 @@ export const signup = async (req, res) => {
     url,
   });
   const token = createJwtToken(userId);
+  setToken(res, token);
   return res.status(201).json({ token, username }); // 201, created
 };
 
@@ -37,6 +38,7 @@ export const login = async (req, res) => {
     return res.status(401).json({ message: "Invalid user or password" });
   }
   const token = createJwtToken(user.id);
+  setToken(res, token);
   return res.status(200).json({ token, username });
 };
 
@@ -52,4 +54,14 @@ const createJwtToken = (id) => {
   return jwt.sign({ id }, config.jwt.secretKey, {
     expiresIn: config.jwt.expiresInSec,
   });
+};
+
+const setToken = (res, token) => {
+  const options = {
+    maxAge: config.jwt.expiresInSec * 1000,
+    httpOnly: true,
+    sameSite: "none", // 서버와 클라이언트가 다른 도메인이라도 서로 동작할 수 있도록 설정.
+    secure: true,
+  };
+  res.cookie("token", token, options); // Http-Only 🍪
 };

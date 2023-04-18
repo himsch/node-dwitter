@@ -9,16 +9,19 @@ import { isAuth } from "./middleware/auth.js";
 import { config } from "./config.js";
 import { initSocket } from "./connection/socket.js";
 import { sequelize } from "./db/database.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const corsOption = {
   origin: config.cors.allowedOrigin,
   optionsSuccessStatus: 200,
+  credentials: true, // allow the "Access-Control-Allow-Credentials" Header
 };
 app.use(morgan("tiny"));
 app.use(cors(corsOption));
 app.use(helmet());
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/auth", authRouter);
 app.use("/tweets", [isAuth, tweetsRouter]);
