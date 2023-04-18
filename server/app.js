@@ -11,10 +11,12 @@ import { initSocket } from "./connection/socket.js";
 import { sequelize } from "./db/database.js";
 
 const app = express();
-const option = {};
-
+const corsOption = {
+  origin: config.cors.allowedOrigin,
+  optionsSuccessStatus: 200,
+};
 app.use(morgan("tiny"));
-app.use(cors(option));
+app.use(cors(corsOption));
 app.use(helmet());
 app.use(express.json());
 
@@ -30,6 +32,7 @@ app.use((err, req, res, next) => {
 });
 
 sequelize.sync().then(() => {
-  const server = app.listen(config.host.port);
+  console.log(`Server is Started... ${new Date()}`);
+  const server = app.listen(config.port);
   initSocket(server);
 });
