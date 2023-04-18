@@ -1,12 +1,17 @@
-import { MongoClient } from "mongodb";
+import mongoose from "mongoose";
 import { config } from "../config.js";
 
-let db;
 export async function connectDB() {
-  return MongoClient.connect(config.db.host) //
-    .then((client) => {
-      db = client.db("dwitter");
-    });
+  return mongoose.connect(config.db.host);
+}
+
+export function useVirtualId(schema) {
+  // _id -> id
+  schema.virtual("id").get(function () {
+    return this._id.toString();
+  });
+  schema.set("toJSON", { virtuals: true }); // 설정한 가상 id를 json 포함.
+  schema.set("toObject", { virtuals: true }); // 설정한 가상 id를 object 포함
 }
 
 export function getUsers() {

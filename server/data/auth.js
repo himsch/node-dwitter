@@ -1,25 +1,27 @@
+import mongoose from "mongoose";
+
 import { ObjectId } from "mongodb";
-import { getUsers } from "../database/database.js";
+import { getUsers, useVirtualId } from "../database/database.js";
+
+const userSchema = new mongoose.Schema({
+  username: { type: String, require: true },
+  password: { type: String, require: true },
+  name: { type: String, require: true },
+  email: { type: String, require: true },
+  url: String,
+});
+
+useVirtualId(userSchema);
+const User = mongoose.model("User", userSchema);
 
 export const findByUsername = async (username) => {
-  return getUsers() //
-    .findOne({ username })
-    .then(mapOptionalUser);
+  return User.findOne({ username });
 };
 
 export const findById = async (id) => {
-  return getUsers()
-    .findOne({ _id: new ObjectId(id) })
-    .then(mapOptionalUser);
+  return User.findById(id);
 };
 
 export const createUser = async (user) => {
-  return getUsers()
-    .insertOne(user)
-    .then((result) => result.insertedId.toString());
+  return new User(user).save().then((data) => data.id);
 };
-
-// map 은 a를 받아서 b로 변환해서 리턴, user가 있을수도 null일 수도 있으니 optional
-function mapOptionalUser(user) {
-  return user ? { ...user, id: user._id.toString() } : user;
-}

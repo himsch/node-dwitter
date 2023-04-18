@@ -32,7 +32,7 @@ app.use((err, req, res, next) => {
 
 connectDB()
   .then(() => {
-    console.log("DB Connected!!");
+    console.log("Mongo DB Connected!!");
     const server = app.listen(config.host.port);
     initSocket(server);
   })
