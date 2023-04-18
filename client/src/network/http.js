@@ -11,6 +11,7 @@ export default class HttpClient {
         "Content-Type": "application/json",
         ...options.headers,
       },
+      credentials: "include", // 브라우저가 credential 에 관련된 내용을 자동으로 요청 헤더에 추가해서 요청.
     });
     let data;
     try {
