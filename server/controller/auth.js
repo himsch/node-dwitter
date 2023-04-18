@@ -42,6 +42,11 @@ export const login = async (req, res) => {
   return res.status(200).json({ token, username });
 };
 
+export async function logout(req, res, next) {
+  res.cookie("token", "");
+  res.status(200).json({ message: "User has been logged out" });
+}
+
 export const me = async (req, res) => {
   const user = await userRepository.findById(req.userId);
   if (!user) {

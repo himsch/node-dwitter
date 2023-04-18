@@ -24,6 +24,8 @@ export default class AuthService {
   }
 
   async logout() {
-    // @Todo
+    return this.http.fetch("/auth/logout", {
+      method: "POST",
+    });
   }
 }
