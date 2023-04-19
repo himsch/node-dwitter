@@ -11,6 +11,7 @@ import { initSocket } from "./connection/socket.js";
 import { sequelize } from "./db/database.js";
 import cookieParser from "cookie-parser";
 import { csrfCheck } from "./middleware/csrf.js";
+import rateLimit from "./middleware/rate-limiter.js";
 
 const app = express();
 const corsOption = {
@@ -23,6 +24,7 @@ app.use(cors(corsOption));
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
+app.use(rateLimit);
 
 app.use(csrfCheck);
 app.use("/auth", authRouter);
