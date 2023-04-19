@@ -10,6 +10,7 @@ import { config } from "./config.js";
 import { initSocket } from "./connection/socket.js";
 import { sequelize } from "./db/database.js";
 import cookieParser from "cookie-parser";
+import { csrfCheck } from "./middleware/csrf.js";
 
 const app = express();
 const corsOption = {
@@ -23,6 +24,7 @@ app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 
+app.use(csrfCheck);
 app.use("/auth", authRouter);
 app.use("/tweets", [isAuth, tweetsRouter]);
 

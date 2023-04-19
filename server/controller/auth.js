@@ -55,6 +55,15 @@ export const me = async (req, res) => {
   res.status(200).json({ token: req.token, username: user.username });
 };
 
+export const csrfToken = async (req, res) => {
+  const csrfToken = await generateCSRFToken();
+  res.status(200).json({ csrfToken });
+};
+
+const generateCSRFToken = async () => {
+  return bcrypt.hash(config.csrf.plainToken, 1);
+};
+
 const createJwtToken = (id) => {
   return jwt.sign({ id }, config.jwt.secretKey, {
     expiresIn: config.jwt.expiresInSec,
