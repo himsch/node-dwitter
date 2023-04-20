@@ -12,7 +12,7 @@ import * as userRepository from "./auth.js";
 let tweets = [
     {
         id: "1",
-        text: "송홍규 화이팅!",
+        text: "송홍규 화이팅!!!!!!!",
         createdAt: new Date(),
         userId: "1",
     },
@@ -26,8 +26,8 @@ let tweets = [
 export function getAll() {
     return __awaiter(this, void 0, void 0, function* () {
         return Promise.all(tweets.map((tweet) => __awaiter(this, void 0, void 0, function* () {
-            const { username, name, url } = yield userRepository.findById(tweet.userId);
-            return Object.assign(Object.assign({}, tweet), { username, name, url });
+            const user = yield userRepository.findById(tweet.userId);
+            return Object.assign(Object.assign({}, tweet), { username: user === null || user === void 0 ? void 0 : user.username, name: user === null || user === void 0 ? void 0 : user.name, url: user === null || user === void 0 ? void 0 : user.url });
         })));
     });
 }
@@ -42,8 +42,8 @@ export function getById(id) {
         if (!found) {
             return null;
         }
-        const { username, name, url } = yield userRepository.findById(found.userId);
-        return Object.assign(Object.assign({}, found), { username, name, url });
+        const user = yield userRepository.findById(found.userId);
+        return Object.assign(Object.assign({}, found), { username: user === null || user === void 0 ? void 0 : user.username, name: user === null || user === void 0 ? void 0 : user.name, url: user === null || user === void 0 ? void 0 : user.url });
     });
 }
 export function create(text, userId) {
@@ -55,7 +55,7 @@ export function create(text, userId) {
             userId,
         };
         tweets = [tweet, ...tweets];
-        return getById(tweet.id);
+        return (yield getById(tweet.id));
     });
 }
 export function update(id, text) {
@@ -64,7 +64,7 @@ export function update(id, text) {
         if (tweet) {
             tweet.text = text;
         }
-        return getById(tweet.id);
+        return (yield getById(id));
     });
 }
 export function remove(id) {

@@ -15,7 +15,7 @@ app.use(cors(option));
 app.use(helmet());
 app.use(express.json());
 app.use("/auth", authRouter);
-app.use("/tweets", [isAuth, tweetsRouter]);
+app.use("/tweets", [tweetsRouter]);
 app.use((req, res, next) => {
     res.sendStatus(404);
 });
