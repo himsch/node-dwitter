@@ -12,6 +12,8 @@ import { sequelize } from "./db/database.js";
 import cookieParser from "cookie-parser";
 import { csrfCheck } from "./middleware/csrf.js";
 import rateLimit from "./middleware/rate-limiter.js";
+import yaml from "yamljs";
+import swaggerUI from "swagger-ui-express";
 
 const app = express();
 const corsOption = {
@@ -19,14 +21,16 @@ const corsOption = {
   optionsSuccessStatus: 200,
   credentials: true, // allow the "Access-Control-Allow-Credentials" Header
 };
+const openAPIDocument = yaml.load("./api/openapi.yaml");
 app.use(morgan("tiny"));
 app.use(cors(corsOption));
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
 app.use(rateLimit);
-
 app.use(csrfCheck);
+
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(openAPIDocument));
 app.use("/auth", authRouter);
 app.use("/tweets", [isAuth, tweetsRouter]);
 
